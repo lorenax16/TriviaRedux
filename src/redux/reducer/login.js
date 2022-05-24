@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 const loginAction = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case 'SET_USER_NAME':
-    return { ...state, name: action.payload.name, email: action.payload.email };
+    return { ...state, name: action.payload };
   default:
     return state;
   }
