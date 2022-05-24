@@ -1,6 +1,8 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 // import { connect } from 'react-redux';
+import fetchAPI from '../api/fetchAPI';
+import { tokenStorage } from '../api/storage';
 
 class Login extends Component {
   constructor() {
@@ -13,36 +15,43 @@ class Login extends Component {
   }
 
   handleChange = ({ target }) => {
-    this.setState({
-      [target.name]: target.value,
-    }, () => {
-      const { email, name } = this.state;
-      //   const validaNome = 3;
-      const validaEmail = this.validateEmail(email);
-      if (validaEmail && name.length !== 0) {
-        this.setState({
-          saveButton: false,
-        });
-      } else {
-        this.setState({
-          saveButton: true,
-        });
-      }
-    });
-  }
+    this.setState(
+      {
+        [target.name]: target.value,
+      },
+      () => {
+        const { email, name } = this.state;
+        //   const validaNome = 3;
+        const validaEmail = this.validateEmail(email);
+        if (validaEmail && name.length !== 0) {
+          this.setState({
+            saveButton: false,
+          });
+        } else {
+          this.setState({
+            saveButton: true,
+          });
+        }
+      },
+    );
+  };
 
   validateEmail = (email) => {
     const verificar = /\S+@\S+\.\S+/;
     return verificar.test(email);
   };
 
-  //   handleSubmit = (event) => {
-  //     // const { history } = this.props;
-  //     // const { name } = this.state;
-  //     event.preventDefault();
-  //     // setUserName(name);
-  //     // history.push('/search');
-  //   }
+  handleSubmit = async (event) => {
+    event.preventDefault();
+    const resultApi = await fetchAPI();
+
+    const { history } = this.props;
+    // const { name } = this.state;
+
+    // setUserName(name);
+    history.push('/teladejogo');
+    return tokenStorage('token', resultApi.token);
+  };
 
   render() {
     const { saveButton, name, email } = this.state;
@@ -81,7 +90,6 @@ class Login extends Component {
             onClick={ this.handleSubmit }
           >
             Play
-
           </button>
         </form>
       </div>
@@ -93,9 +101,11 @@ class Login extends Component {
 //   setUserName: (name) => dispatch(setUserName(name)),
 // });
 
-// Login.propTypes = {
-//   history: PropTypes.object.isRequired,
-//   setUserName: PropTypes.func.isRequired,
-// };
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  // setUserName: PropTypes.func.isRequired,
+};
 
 export default Login;
