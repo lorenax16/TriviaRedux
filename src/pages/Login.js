@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import fetchAPI from '../api/fetchAPI';
 import { tokenStorage } from '../api/storage';
 import ConfigBtn from '../Components/ConfigBtn';
+import { setUserName } from '../redux/action/index';
 
 class Login extends Component {
   constructor() {
@@ -46,10 +47,9 @@ class Login extends Component {
     event.preventDefault();
     const resultApi = await fetchAPI();
 
-    const { history } = this.props;
-    // const { name } = this.state;
-
-    // setUserName(name);
+    const { history, setName } = this.props;
+    const { name } = this.state;
+    setName(name);
     history.push('/teladejogo');
     return tokenStorage('token', resultApi.token);
   };
@@ -99,15 +99,15 @@ class Login extends Component {
   }
 }
 
-// const mapDispatchToProps = (dispatch) => ({
-//   setUserName: (name) => dispatch(setUserName(name)),
-// });
+const mapDispatchToProps = (dispatch) => ({
+  setName: (name) => dispatch(setUserName(name)),
+});
 
 Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  // setUserName: PropTypes.func.isRequired,
+  setName: PropTypes.func.isRequired,
 };
 
-export default Login;
+export default connect(null, mapDispatchToProps)(Login);
