@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 import fetchAPI from '../api/fetchAPI';
 import { tokenStorage } from '../api/storage';
+import ConfigBtn from '../Components/ConfigBtn';
 
 class Login extends Component {
   constructor() {
@@ -91,6 +92,7 @@ class Login extends Component {
           >
             Play
           </button>
+          <ConfigBtn />
         </form>
       </div>
     );
