@@ -5,13 +5,14 @@ import { connect } from 'react-redux';
 class Header extends Component {
   render() {
     const total = 0;
-    const { playerName } = this.props;
+    const { name, email } = this.props;
+
     return (
       <div>
         <img data-testid="header-profile-picture" alt="avatar" />
         <p data-testid="header-player-name">
           Nome:
-          { playerName }
+          { name }
         </p>
         <p>
           Placar:
@@ -23,11 +24,13 @@ class Header extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  playerName: state.loginAction.name,
+  name: state.loginAction.name,
+  email: state.loginAction.email,
 });
 
 Header.propTypes = {
-  playerName: PropTypes.string,
+  name: PropTypes.string,
+  email: PropTypes.string,
 }.isRequired;
 
 export default connect(mapStateToProps)(Header);
