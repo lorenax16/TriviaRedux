@@ -16,14 +16,14 @@ class Header extends Component {
           alt="avatar"
         />
 
-        <p data-testid="header-player-name">
+        <h4 data-testid="header-player-name">
           Nome:
           { name }
-        </p>
-        <p>
+        </h4>
+        <h4>
           Placar:
-        </p>
-        <p data-testid="header-score">{ total }</p>
+        </h4>
+        <h4 data-testid="header-score">{ total }</h4>
       </div>
     );
   }
