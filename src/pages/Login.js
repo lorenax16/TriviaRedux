@@ -48,8 +48,8 @@ class Login extends Component {
     const resultApi = await fetchAPI();
 
     const { history, setName } = this.props;
-    const { name } = this.state;
-    setName(name);
+    const { name, email } = this.state;
+    setName({ name, email });
     history.push('/teladejogo');
     return tokenStorage('token', resultApi.token);
   };
@@ -100,7 +100,7 @@ class Login extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  setName: (name) => dispatch(setUserName(name)),
+  setName: (login) => dispatch(setUserName(login)),
 });
 
 Login.propTypes = {
