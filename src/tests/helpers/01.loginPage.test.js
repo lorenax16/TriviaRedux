@@ -2,11 +2,11 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import App from '../../App';
-import renderWithRouter from './renderWithRouter'
+import renderWithRouterAndRedux from './renderWithRouterAndRedux'
 
 describe('Testa tela de Login', () => {
   it('testa o input de nome e email', () => {
-    renderWithRouter(<App />)
+    renderWithRouterAndRedux(<App />)
   const inputElement = screen.getAllByRole ('textbox');
   expect(inputElement[0]).toHaveValue('');
   userEvent.type(inputElement[0], 'Daniel de Souza');
@@ -17,7 +17,7 @@ describe('Testa tela de Login', () => {
   expect(inputElement[1]).toHaveValue('daniel@daniel.com');
   })
   it('testa se o botão play está desabilitado ao digitar apenas o nome', () => {
-    renderWithRouter(<App />)
+    renderWithRouterAndRedux(<App />)
     const inputElement = screen.getAllByRole ('textbox');
     const buttonEllement = screen.getByRole('button');
     
@@ -27,7 +27,7 @@ describe('Testa tela de Login', () => {
     expect(buttonEllement).toBeDisabled();
   })
   it('testa se o botão play está desabilitado se os inputs estiverem vazios', () => {
-    renderWithRouter(<App />)
+    renderWithRouterAndRedux(<App />)
     const inputElement = screen.getAllByRole ('textbox');
     const buttonEllement = screen.getByRole('button');
     
@@ -36,7 +36,7 @@ describe('Testa tela de Login', () => {
     expect(buttonEllement).toBeDisabled();
   })
   it('testa se o botão play está desabilitado ao digitar apenas o email', () => {
-    renderWithRouter(<App />)
+    renderWithRouterAndRedux(<App />)
     const inputElement = screen.getAllByRole ('textbox');
     const buttonEllement = screen.getByRole('button');
     
@@ -46,7 +46,7 @@ describe('Testa tela de Login', () => {
     expect(buttonEllement).toBeDisabled();
   })
   it('testa se o botão play está habilitado ao digitar nome e email', () => {
-    renderWithRouter(<App />)
+    renderWithRouterAndRedux(<App />)
     const inputElement = screen.getAllByRole ('textbox');
     const buttonEllement = screen.getByRole('button');
     
