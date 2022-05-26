@@ -19,6 +19,8 @@ export default class TelaDeJogo extends Component {
     const perguntasApi = await fetchTrivia();
     console.log(perguntasApi.response_code);
     if (perguntasApi.response_code !== 0) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('response');
       history.push('/');
     } else {
       console.log(token);
@@ -45,10 +47,17 @@ export default class TelaDeJogo extends Component {
 
   renderQuestions() {
     const { perguntas, index } = this.state;
+    const RANDOM_NUMBER = 0.5;
     const filterQuestions = Object.keys(perguntas).filter((key) => key.includes(index))
       .reduce((cur, key) => Object.assign(cur, { [key]: perguntas[key] }), {});
       // https://masteringjs.io/tutorials/fundamentals/filter-key#:~:text=JavaScript%20objects%20don't%20have,()%20function%20as%20shown%20below.
     console.log(filterQuestions);
+    const correct = filterQuestions[index].correct_answer;
+    const incorrects = [...filterQuestions[index].incorrect_answers];
+    const answers = [correct, ...incorrects];
+    const randomAnswers = answers.sort(() => Math.random() - RANDOM_NUMBER);
+    // https://flaviocopes.com/how-to-shuffle-array-javascript/
+    console.log(randomAnswers);
     return (
       <>
         <div key={ index }>
@@ -58,36 +67,17 @@ export default class TelaDeJogo extends Component {
         </div>
         <>
           <h2 data-testid="question-text">{filterQuestions[index].question}</h2>
-          <div data-testid="answer-options">
+          { randomAnswers.map((randomAnswer, answerIndex) => (
             <button
+              key={ answerIndex }
               type="button"
-              data-testid="correct-answer"
+              data-testid={ randomAnswer === correct
+                ? 'correct-answer' : `wrong-answer-${answerIndex}` }
               onClick={ this.handleClick }
             >
-              {filterQuestions[index].correct_answer}
+              {randomAnswer}
             </button>
-            <button
-              type="button"
-              data-testid={ `wrong-answer-${index}` }
-              onClick={ this.handleClick }
-            >
-              {filterQuestions[index].incorrect_answers[0]}
-            </button>
-            <button
-              type="button"
-              data-testid={ `wrong-answer-${index}` }
-              onClick={ this.handleClick }
-            >
-              {filterQuestions[index].incorrect_answers[1]}
-            </button>
-            <button
-              type="button"
-              data-testid={ `wrong-answer-${index}` }
-              onClick={ this.handleClick }
-            >
-              {filterQuestions[index].incorrect_answers[2]}
-            </button>
-          </div>
+          ))}
         </>
       </>
     );
