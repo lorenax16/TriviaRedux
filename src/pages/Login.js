@@ -50,9 +50,9 @@ class Login extends Component {
     const { history, setName } = this.props;
     const { name, email } = this.state;
     setName({ name, email });
-    history.push('/teladejogo');
     tokenStorage('token', resultApi.token);
     tokenStorage('response', resultApi.response_code);
+    history.push('/game');
   };
 
   render() {
