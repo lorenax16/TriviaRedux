@@ -10,12 +10,12 @@ export default class TelaDeJogo extends Component {
     this.state = {
       index: 0,
       perguntas: [],
+      loading: true,
     };
   }
 
   async componentDidMount() {
     const { history } = this.props;
-    const token = localStorage.getItem('token');
     const perguntasApi = await fetchTrivia();
     console.log(perguntasApi.response_code);
     if (perguntasApi.response_code !== 0) {
@@ -23,9 +23,9 @@ export default class TelaDeJogo extends Component {
       localStorage.removeItem('response');
       history.push('/');
     } else {
-      console.log(token);
       this.setState({
         perguntas: perguntasApi.results,
+        loading: false,
       });
       console.log(this.state);
       this.renderQuestions();
@@ -84,11 +84,11 @@ export default class TelaDeJogo extends Component {
   }
 
   render() {
-    const { perguntas } = this.state;
+    const { loading } = this.state;
     return (
       <>
         <Header />
-        { perguntas.length === 0 ? <Loading /> : (
+        { loading ? <Loading /> : (
           this.renderQuestions()
         )}
 
