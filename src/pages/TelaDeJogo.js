@@ -30,9 +30,17 @@ export default class TelaDeJogo extends Component {
     }
   }
 
-  handleClick() {
-    this.setState((prevState) => ({
-      index: prevState.index + 1 }));
+  handleClick = () => {
+    const { index } = this.state;
+    const INDEX_NUMBER = 4;
+    if (index < INDEX_NUMBER) {
+      this.setState((prevState) => ({
+        index: prevState.index + 1 }));
+    } else {
+      this.setState({
+        index: 0,
+      });
+    }
   }
 
   renderQuestions() {
@@ -56,25 +64,28 @@ export default class TelaDeJogo extends Component {
               data-testid="correct-answer"
               onClick={ this.handleClick }
             >
-              correta
+              {filterQuestions[index].correct_answer}
             </button>
             <button
               type="button"
               data-testid={ `wrong-answer-${index}` }
+              onClick={ this.handleClick }
             >
-              incorreta
+              {filterQuestions[index].incorrect_answers[0]}
             </button>
             <button
               type="button"
               data-testid={ `wrong-answer-${index}` }
+              onClick={ this.handleClick }
             >
-              incorreta
+              {filterQuestions[index].incorrect_answers[1]}
             </button>
             <button
               type="button"
               data-testid={ `wrong-answer-${index}` }
+              onClick={ this.handleClick }
             >
-              incorreta
+              {filterQuestions[index].incorrect_answers[2]}
             </button>
           </div>
         </>
@@ -89,7 +100,6 @@ export default class TelaDeJogo extends Component {
         <Header />
         { perguntas.length === 0 ? <Loading /> : (
           this.renderQuestions()
-          // <p> placebo </p>
         )}
 
       </>
