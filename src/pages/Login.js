@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import fetchAPI from '../api/fetchAPI';
+import { fetchAPI } from '../api/fetchAPI';
 import { tokenStorage } from '../api/storage';
 import ConfigBtn from '../Components/ConfigBtn';
 import { setUserName } from '../redux/action/index';
@@ -46,12 +46,13 @@ class Login extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     const resultApi = await fetchAPI();
-
+    console.log(resultApi);
     const { history, setName } = this.props;
     const { name, email } = this.state;
     setName({ name, email });
     history.push('/teladejogo');
-    return tokenStorage('token', resultApi.token);
+    tokenStorage('token', resultApi.token);
+    tokenStorage('response', resultApi.response_code);
   };
 
   render() {
