@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Header from '../Components/Header';
 import { fetchTrivia } from '../api/fetchAPI';
 import Loading from './Loading';
+import '../Css/Game.css';
 
 export default class Game extends Component {
   constructor() {
@@ -34,16 +35,28 @@ export default class Game extends Component {
     }
   }
 
-  handleClick = () => {
-    const { index } = this.state;
-    const INDEX_NUMBER = 4;
-    if (index < INDEX_NUMBER) {
-      this.setState((prevState) => ({
-        index: prevState.index + 1 }));
-    } else {
-      this.setState({
-        index: 0,
-      });
+  handleClick = (event) => {
+    // const { index } = this.state;
+    // const INDEX_NUMBER = 4;
+    // if (index < INDEX_NUMBER) {
+    //   this.setState((prevState) => ({
+    //     index: prevState.index + 1 }));
+    // } else {
+    //   this.setState({
+    //     index: 0,
+    //   });
+    // }
+
+    const allBTn = document.querySelectorAll('#answerBtn');
+    console.log(allBTn);
+
+    for (let i = 0; i < allBTn.length; i += 1) {
+      if (allBTn[i].name === 'correct') {
+        allBTn[i].style.border = '3px solid  rgb(6,240,15)';
+      } else {
+        allBTn[i].style.border = '3px solid  rgb(255,0,0)';
+      }
+      console.log(event.target.name);
     }
   }
 
@@ -72,6 +85,9 @@ export default class Game extends Component {
           <div data-testid="answer-options">
             { randomAnswers.map((randomAnswer, answerIndex) => (
               <button
+                id="answerBtn"
+                name={ randomAnswer === correct
+                  ? 'correct' : 'wrong' }
                 key={ answerIndex }
                 type="button"
                 data-testid={ randomAnswer === correct
