@@ -90,9 +90,9 @@ describe('Testa tela de Login', () => {
     expect(buttonEllement[0]).not.toBeDisabled();
 
     userEvent.click(buttonEllement[0])
-    history.push('/teladejogo');
+    history.push('/game');
 
-    expect(history.location.pathname).toBe('/teladejogo');
+    expect(history.location.pathname).toBe('/game');
     expect(await nameElement).toBeVisible();
     
   })
