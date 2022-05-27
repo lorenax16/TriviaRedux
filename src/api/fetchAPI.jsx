@@ -5,10 +5,13 @@ export const fetchAPI = async () => {
   return data;
 };
 
-export const fetchTrivia = async () => {
-  const token = localStorage.getItem('token');
-  const URL_TRIVIA = `https://opentdb.com/api.php?amount=5&token=${token}`;
-  const response = await fetch(URL_TRIVIA);
-  const perguntas = await response.json();
-  return perguntas;
+export const fetchTrivia = async (token) => {
+  try {
+    const URL_TRIVIA = `https://opentdb.com/api.php?amount=5&token=${token}`;
+    const response = await fetch(URL_TRIVIA);
+    const perguntas = await response.json();
+    return perguntas;
+  } catch (error) {
+    console.log(error);
+  }
 };

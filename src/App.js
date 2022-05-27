@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Login from './pages/Login';
 import './App.css';
-import TelaDeJogo from './pages/TelaDeJogo';
+import Game from './pages/Game';
 import Configuracoes from './pages/Configuracoes';
 
 export default function App() {
@@ -10,7 +10,7 @@ export default function App() {
     <div className="App">
       <Switch>
         <Route path="/" exact component={ Login } />
-        <Route path="/teladejogo" exact component={ TelaDeJogo } />
+        <Route path="/game" exact component={ Game } />
         <Route path="/configuracoes" exact component={ Configuracoes } />
       </Switch>
     </div>

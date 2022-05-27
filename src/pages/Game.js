@@ -4,7 +4,7 @@ import Header from '../Components/Header';
 import { fetchTrivia } from '../api/fetchAPI';
 import Loading from './Loading';
 
-export default class TelaDeJogo extends Component {
+export default class Game extends Component {
   constructor() {
     super();
     this.state = {
@@ -14,24 +14,23 @@ export default class TelaDeJogo extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.getQuestions();
+  }
+
+  getQuestions = async () => {
     const { history } = this.props;
-    this.setState({
-      loading: true,
-    });
-    const perguntasApi = await fetchTrivia();
-    console.log(perguntasApi.response_code);
-    if (perguntasApi.response_code !== 0) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('response');
-      history.push('/');
-    } else {
+    const token = localStorage.getItem('token');
+    const perguntasApi = await fetchTrivia(token);
+    // const INVALID_RESPONSE = 3;
+    if (perguntasApi.results.length) {
       this.setState({
         perguntas: perguntasApi.results,
         loading: false,
       });
-      console.log(this.state);
-      this.renderQuestions();
+    } else {
+      localStorage.setItem('token', '');
+      history.push('/');
     }
   }
 
@@ -70,17 +69,19 @@ export default class TelaDeJogo extends Component {
         </div>
         <>
           <h2 data-testid="question-text">{filterQuestions[index].question}</h2>
-          { randomAnswers.map((randomAnswer, answerIndex) => (
-            <button
-              key={ answerIndex }
-              type="button"
-              data-testid={ randomAnswer === correct
-                ? 'correct-answer' : `wrong-answer-${answerIndex}` }
-              onClick={ this.handleClick }
-            >
-              {randomAnswer}
-            </button>
-          ))}
+          <div data-testid="answer-options">
+            { randomAnswers.map((randomAnswer, answerIndex) => (
+              <button
+                key={ answerIndex }
+                type="button"
+                data-testid={ randomAnswer === correct
+                  ? 'correct-answer' : `wrong-answer-${answerIndex}` }
+                onClick={ this.handleClick }
+              >
+                {randomAnswer}
+              </button>
+            ))}
+          </div>
         </>
       </>
     );
@@ -100,7 +101,7 @@ export default class TelaDeJogo extends Component {
   }
 }
 
-TelaDeJogo.propTypes = {
+Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
