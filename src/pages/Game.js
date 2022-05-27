@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Header from '../Components/Header';
 import { fetchTrivia } from '../api/fetchAPI';
 import Loading from './Loading';
-import '../Css/Game.css';
+import Timer from '../Components/Timer';
 
-export default class Game extends Component {
+class Game extends Component {
   constructor() {
     super();
     this.state = {
       index: 0,
       perguntas: [],
       loading: true,
+      // isDisabled: false,
     };
   }
 
@@ -60,8 +62,29 @@ export default class Game extends Component {
     }
   }
 
+  createNextBtn = () => {
+    const allBTn = document.querySelectorAll('#answerBtn');
+    console.log(allBTn);
+    for (let i = 0; i < allBTn.length; i += 1) {
+      if (allBTn[i].name === 'correct') {
+        allBTn[i].style.border = '3px solid  rgb(6,240,15)';
+      } else {
+        allBTn[i].style.border = '3px solid  rgb(255,0,0)';
+      }
+    }
+
+    return (
+      <div>
+        <div>
+          <button type="button">Next</button>
+        </div>
+      </div>
+    );
+  }
+
   renderQuestions() {
     const { perguntas, index } = this.state;
+    const { timer } = this.props;
     const RANDOM_NUMBER = 0.5;
     const filterQuestions = Object.keys(perguntas).filter((key) => key.includes(index))
       .reduce((cur, key) => Object.assign(cur, { [key]: perguntas[key] }), {});
@@ -93,6 +116,7 @@ export default class Game extends Component {
                 data-testid={ randomAnswer === correct
                   ? 'correct-answer' : `wrong-answer-${answerIndex}` }
                 onClick={ this.handleClick }
+                disabled={ timer }
               >
                 {randomAnswer}
               </button>
@@ -105,13 +129,15 @@ export default class Game extends Component {
 
   render() {
     const { loading } = this.state;
+    const { timer } = this.props;
     return (
       <>
         <Header />
         { loading ? <Loading /> : (
           this.renderQuestions()
         )}
-
+        <Timer />
+        {timer && this.createNextBtn()}
       </>
     );
   }
@@ -121,4 +147,11 @@ Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  timer: PropTypes.bool.isRequired,
 };
+
+const mapStateToProps = (state) => ({
+  timer: state.gameAction.finished,
+});
+
+export default connect(mapStateToProps)(Game);
