@@ -10,7 +10,7 @@ export default class Game extends Component {
     this.state = {
       index: 0,
       perguntas: [],
-      loading: false,
+      loading: true,
     };
   }
 
