@@ -59,7 +59,7 @@ export default class Game extends Component {
     const answers = [correct, ...incorrects];
     const randomAnswers = answers.sort(() => Math.random() - RANDOM_NUMBER);
     // https://flaviocopes.com/how-to-shuffle-array-javascript/
-    console.log(randomAnswers);
+    // console.log(randomAnswers);
     return (
       <>
         <div key={ index }>
