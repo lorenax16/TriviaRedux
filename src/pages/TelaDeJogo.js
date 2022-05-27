@@ -10,12 +10,15 @@ export default class TelaDeJogo extends Component {
     this.state = {
       index: 0,
       perguntas: [],
-      loading: true,
+      loading: false,
     };
   }
 
   async componentDidMount() {
     const { history } = this.props;
+    this.setState({
+      loading: true,
+    });
     const perguntasApi = await fetchTrivia();
     console.log(perguntasApi.response_code);
     if (perguntasApi.response_code !== 0) {
