@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
+// import PropTypes from 'prop-types';
 import { fetchTrivia } from '../api/fetchAPI';
 import Loading from '../pages/Loading';
 import Timer from './Timer';
-// import { setTimer } from '../redux/action';
 
-class RenderQuestions extends Component {
+const answerBtn = '#answerBtn';
+
+class RenderQuestions extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -15,7 +16,6 @@ class RenderQuestions extends Component {
       seconds: 30,
       finishedLocal: false,
       randomRespostas: [],
-      filteredQuestion: [],
     };
   }
 
@@ -58,19 +58,14 @@ timer = () => {
   }
 
   getQuestions = async () => {
-    const { history } = this.props;
     const token = localStorage.getItem('token');
     const perguntasApi = await fetchTrivia(token);
-    // const INVALID_RESPONSE = 3;
     if (perguntasApi.results.length) {
       this.setState({
         perguntas: perguntasApi.results,
         loading: false,
       });
       this.renderQuestions();
-    } else {
-      localStorage.setItem('token', '');
-      history.push('/');
     }
   }
 
@@ -96,9 +91,7 @@ timer = () => {
       finishedLocal: true,
     }, () => clearInterval(this.intervalId));
 
-    // dispatch(setTimer(true));
-
-    const allBTn = document.querySelectorAll('#answerBtn');
+    const allBTn = document.querySelectorAll(answerBtn);
     console.log(allBTn);
 
     for (let i = 0; i < allBTn.length; i += 1) {
@@ -109,7 +102,7 @@ timer = () => {
       }
       console.log(event.target.name);
     }
-    const resultDiff = this.calcValue();
+    // const resultDiff = this.calcValue();
 
     // if (event.target.name === 'correct') {
     //   const correctValue = 10;
@@ -124,8 +117,7 @@ timer = () => {
   handleNext = () => {
     const { index } = this.state;
     const INDEX_NUMBER = 4;
-    const allBTn = document.querySelectorAll('#answerBtn');
-    // console.log(index);
+    const allBTn = document.querySelectorAll(answerBtn);
     if (index < INDEX_NUMBER) {
       for (let i = 0; i < allBTn.length; i += 1) {
         allBTn[i].style.border = 'none';
@@ -140,7 +132,7 @@ timer = () => {
   }
 
   createNextBtn = () => {
-    const allBTn = document.querySelectorAll('#answerBtn');
+    const allBTn = document.querySelectorAll(answerBtn);
     console.log(allBTn);
     for (let i = 0; i < allBTn.length; i += 1) {
       if (allBTn[i].name === 'correct') {
@@ -180,7 +172,6 @@ timer = () => {
 
     this.setState({
       randomRespostas: randomAnswers,
-      filteredQuestion: filterQuestions,
     });
 
     // https://flaviocopes.com/how-to-shuffle-array-javascript/
@@ -193,7 +184,6 @@ timer = () => {
       seconds,
       finishedLocal,
       randomRespostas,
-      filteredQuestion,
       index } = this.state;
 
     return (
@@ -236,12 +226,10 @@ timer = () => {
   }
 }
 
-RenderQuestions.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  // dispatch: PropTypes.func.isRequired,
-  // stopwatch: PropTypes.number.isRequired,
-};
+// RenderQuestions.propTypes = {
+//   history: PropTypes.shape({
+//     push: PropTypes.func.isRequired,
+//   }).isRequired,
+// };
 
 export default RenderQuestions;
