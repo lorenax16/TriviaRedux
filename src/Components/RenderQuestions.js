@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { fetchTrivia } from '../api/fetchAPI';
 import Loading from '../pages/Loading';
-import { setTimer } from '../redux/action';
+import Timer from './Timer';
+// import { setTimer } from '../redux/action';
 
 class RenderQuestions extends Component {
   constructor() {
@@ -21,9 +22,9 @@ class RenderQuestions extends Component {
     this.handleTimer();
   }
 
-  // componentDidUpdate() {
-
-  // }
+  componentDidUpdate() {
+    this.timer();
+  }
 
   componentWillUnmount() {
     clearInterval(this.intervalId);
@@ -47,6 +48,7 @@ timer = () => {
 }
 
   handleTimer = () => {
+    // event.preventDefault();
     const ONE_SECOND = 1000;
     this.intervalId = setInterval(() => {
       console.log(this.intervalId);
@@ -87,9 +89,12 @@ timer = () => {
   }
 
   handleClick = (event) => {
-    const { dispatch, stopwatch } = this.props;
+    // const { finishedLocal } = this.state;
+    this.setState({
+      finishedLocal: true,
+    }, () => clearInterval(this.intervalId));
 
-    dispatch(setTimer(true));
+    // dispatch(setTimer(true));
 
     const allBTn = document.querySelectorAll('#answerBtn');
     console.log(allBTn);
@@ -104,14 +109,32 @@ timer = () => {
     }
     const resultDiff = this.calcValue();
 
-    if (event.target.name === 'correct') {
-      const correctValue = 10;
-      const score = correctValue + (stopwatch * resultDiff);
-      console.log(score);
-    }
-    console.log(stopwatch);
+    // if (event.target.name === 'correct') {
+    //   const correctValue = 10;
+    //   const score = correctValue + (stopwatch * resultDiff);
+    //   console.log(score);
+    // }
+    // console.log(stopwatch);
 
-    return 0;
+    // return 0;
+  }
+
+  handleNext = () => {
+    const { index } = this.state;
+    const INDEX_NUMBER = 4;
+    const allBTn = document.querySelectorAll('#answerBtn');
+
+    if (index < INDEX_NUMBER) {
+      for (let i = 0; i < allBTn.length; i += 1) {
+        allBTn[i].style.border = 'none';
+      }
+      this.setState((prevState) => ({
+        index: prevState.index + 1,
+        finishedLocal: false,
+        seconds: 30,
+      }));
+      this.handleTimer();
+    }
   }
 
   createNextBtn = () => {
@@ -127,14 +150,20 @@ timer = () => {
     return (
       <div>
         <div>
-          <button type="button">Next</button>
+          <button
+            type="button"
+            onClick={ this.handleNext }
+          >
+            Next
+
+          </button>
         </div>
       </div>
     );
   };
 
   renderQuestions() {
-    const { perguntas, index, timer } = this.state;
+    const { perguntas, index, finishedLocal } = this.state;
     const RANDOM_NUMBER = 0.5;
     const filterQuestions = Object.keys(perguntas).filter((key) => key.includes(index))
       .reduce((cur, key) => Object.assign(cur, { [key]: perguntas[key] }), {});
@@ -166,7 +195,7 @@ timer = () => {
                 data-testid={ randomAnswer === correct
                   ? 'correct-answer' : `wrong-answer-${answerIndex}` }
                 onClick={ this.handleClick }
-                disabled={ timer }
+                disabled={ finishedLocal }
 
               >
                 {randomAnswer}
@@ -179,18 +208,19 @@ timer = () => {
   }
 
   render() {
-    const { loading, seconds, timer } = this.state;
+    const { loading, seconds, finishedLocal } = this.state;
     return (
-      <>
-        <div>
-          { loading ? <Loading /> : (
-            this.renderQuestions()
-          )}
-          {timer && this.createNextBtn()}
-        </div>
-        <div>{ seconds }</div>
-
-      </>
+      <div>
+        { loading ? <Loading /> : (
+          <div>
+            {this.renderQuestions()}
+            <Timer
+              seconds={ seconds }
+            />
+          </div>
+        )}
+        {finishedLocal && this.createNextBtn()}
+      </div>
 
     );
   }
@@ -200,8 +230,8 @@ RenderQuestions.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  dispatch: PropTypes.func.isRequired,
-  stopwatch: PropTypes.number.isRequired,
+  // dispatch: PropTypes.func.isRequired,
+  // stopwatch: PropTypes.number.isRequired,
 };
 
 export default RenderQuestions;
