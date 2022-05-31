@@ -14,6 +14,8 @@ class RenderQuestions extends Component {
       loading: true,
       seconds: 30,
       finishedLocal: false,
+      randomPerguntas: '',
+      filteredQuestion: [],
     };
   }
 
@@ -48,7 +50,6 @@ timer = () => {
 }
 
   handleTimer = () => {
-    // event.preventDefault();
     const ONE_SECOND = 1000;
     this.intervalId = setInterval(() => {
       console.log(this.intervalId);
@@ -163,57 +164,62 @@ timer = () => {
   };
 
   renderQuestions() {
-    const { perguntas, index, finishedLocal } = this.state;
+    const { perguntas, index } = this.state;
+    console.log(perguntas);
     const RANDOM_NUMBER = 0.5;
     const filterQuestions = Object.keys(perguntas).filter((key) => key.includes(index))
       .reduce((cur, key) => Object.assign(cur, { [key]: perguntas[key] }), {});
     // https://masteringjs.io/tutorials/fundamentals/filter-key#:~:text=JavaScript%20objects%20don't%20have,%20function%20as%20shown%20below.
-    // console.log(filterQuestions);
+    console.log(filterQuestions);
     const correct = filterQuestions[index].correct_answer;
     const incorrects = [...filterQuestions[index].incorrect_answers];
     const answers = [correct, ...incorrects];
     const randomAnswers = answers.sort(() => Math.random() - RANDOM_NUMBER);
-    // https://flaviocopes.com/how-to-shuffle-array-javascript/
-    // console.log(randomAnswers);
-    return (
-      <>
-        <div key={ index }>
-          <h1 data-testid="question-category">
-            {filterQuestions[index].category}
-          </h1>
-        </div>
-        <>
-          <h2 data-testid="question-text">{filterQuestions[index].question}</h2>
-          <div data-testid="answer-options">
-            { randomAnswers.map((randomAnswer, answerIndex) => (
-              <button
-                id="answerBtn"
-                name={ randomAnswer === correct
-                  ? 'correct' : 'wrong' }
-                key={ answerIndex }
-                type="button"
-                data-testid={ randomAnswer === correct
-                  ? 'correct-answer' : `wrong-answer-${answerIndex}` }
-                onClick={ this.handleClick }
-                disabled={ finishedLocal }
 
-              >
-                {randomAnswer}
-              </button>
-            ))}
-          </div>
-        </>
-      </>
-    );
+    this.setState({
+      randomPerguntas: [randomAnswers],
+      filteredQuestion: [filterQuestions],
+    });
+    // https://flaviocopes.com/how-to-shuffle-array-javascript/
   }
 
   render() {
-    const { loading, seconds, finishedLocal } = this.state;
+    const {
+      loading,
+      seconds,
+      finishedLocal,
+      randomPerguntas,
+      filteredQuestion,
+      index } = this.state;
+    renderQuestions();
     return (
       <div>
         { loading ? <Loading /> : (
           <div>
-            {this.renderQuestions()}
+            <div key={ index }>
+              <h1 data-testid="question-category">
+                {filteredQuestion[index].category}
+              </h1>
+            </div>
+            <h2 data-testid="question-text">{filteredQuestion[index].question}</h2>
+            <div data-testid="answer-options">
+              { randomPerguntas.map((randomAnswer, answerIndex) => (
+                <button
+                  id="answerBtn"
+                  name={ randomAnswer === correct
+                    ? 'correct' : 'wrong' }
+                  key={ answerIndex }
+                  type="button"
+                  data-testid={ randomAnswer === correct
+                    ? 'correct-answer' : `wrong-answer-${answerIndex}` }
+                  onClick={ this.handleClick }
+                  disabled={ finishedLocal }
+
+                >
+                  {randomAnswer}
+                </button>
+              ))}
+            </div>
             <Timer
               seconds={ seconds }
             />
