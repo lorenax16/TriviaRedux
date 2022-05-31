@@ -14,7 +14,7 @@ class RenderQuestions extends Component {
       loading: true,
       seconds: 30,
       finishedLocal: false,
-      randomPerguntas: '',
+      randomRespostas: [],
       filteredQuestion: [],
     };
   }
@@ -67,6 +67,7 @@ timer = () => {
         perguntas: perguntasApi.results,
         loading: false,
       });
+      this.renderQuestions();
     } else {
       localStorage.setItem('token', '');
       history.push('/');
@@ -124,7 +125,7 @@ timer = () => {
     const { index } = this.state;
     const INDEX_NUMBER = 4;
     const allBTn = document.querySelectorAll('#answerBtn');
-
+    // console.log(index);
     if (index < INDEX_NUMBER) {
       for (let i = 0; i < allBTn.length; i += 1) {
         allBTn[i].style.border = 'none';
@@ -133,7 +134,7 @@ timer = () => {
         index: prevState.index + 1,
         finishedLocal: false,
         seconds: 30,
-      }));
+      }), this.renderQuestions);
       this.handleTimer();
     }
   }
@@ -163,7 +164,7 @@ timer = () => {
     );
   };
 
-  renderQuestions() {
+  renderQuestions =() => {
     const { perguntas, index } = this.state;
     console.log(perguntas);
     const RANDOM_NUMBER = 0.5;
@@ -175,42 +176,45 @@ timer = () => {
     const incorrects = [...filterQuestions[index].incorrect_answers];
     const answers = [correct, ...incorrects];
     const randomAnswers = answers.sort(() => Math.random() - RANDOM_NUMBER);
+    console.log(randomAnswers);
 
     this.setState({
-      randomPerguntas: [randomAnswers],
-      filteredQuestion: [filterQuestions],
+      randomRespostas: randomAnswers,
+      filteredQuestion: filterQuestions,
     });
+
     // https://flaviocopes.com/how-to-shuffle-array-javascript/
   }
 
   render() {
     const {
+      perguntas,
       loading,
       seconds,
       finishedLocal,
-      randomPerguntas,
+      randomRespostas,
       filteredQuestion,
       index } = this.state;
-    renderQuestions();
+
     return (
       <div>
         { loading ? <Loading /> : (
           <div>
             <div key={ index }>
               <h1 data-testid="question-category">
-                {filteredQuestion[index].category}
+                {perguntas[index].category}
               </h1>
             </div>
-            <h2 data-testid="question-text">{filteredQuestion[index].question}</h2>
+            <h2 data-testid="question-text">{perguntas[index].question}</h2>
             <div data-testid="answer-options">
-              { randomPerguntas.map((randomAnswer, answerIndex) => (
+              { randomRespostas.map((randomAnswer, answerIndex) => (
                 <button
                   id="answerBtn"
-                  name={ randomAnswer === correct
+                  name={ randomAnswer === perguntas[index].correct_answer
                     ? 'correct' : 'wrong' }
                   key={ answerIndex }
                   type="button"
-                  data-testid={ randomAnswer === correct
+                  data-testid={ randomAnswer === perguntas[index].correct_answer
                     ? 'correct-answer' : `wrong-answer-${answerIndex}` }
                   onClick={ this.handleClick }
                   disabled={ finishedLocal }
