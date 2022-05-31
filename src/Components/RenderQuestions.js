@@ -125,7 +125,7 @@ timer = () => {
     const { index } = this.state;
     const INDEX_NUMBER = 4;
     const allBTn = document.querySelectorAll('#answerBtn');
-
+    // console.log(index);
     if (index < INDEX_NUMBER) {
       for (let i = 0; i < allBTn.length; i += 1) {
         allBTn[i].style.border = 'none';
