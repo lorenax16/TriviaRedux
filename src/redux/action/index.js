@@ -20,5 +20,5 @@ export const setTimerValue = (seconds) => ({
 
 export const setPlayerScore = (score) => ({
   type: 'PLAYER_SCORE',
-  score,
+  payload: score,
 });

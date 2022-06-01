@@ -1,17 +1,11 @@
 const INITIAL_STATE = {
-  player: {
-    name: ' ',
-    assertions: 0,
-    score: 0,
-    gravatarEmail: '',
-  },
-
+  score: 0,
 };
 
 const scoreAction = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case 'PLAYER_SCORE':
-    return { ...state, ...action.payload };
+    return action.payload;
   default:
     return state;
   }
