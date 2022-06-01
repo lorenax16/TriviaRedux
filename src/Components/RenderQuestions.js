@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { fetchTrivia } from '../api/fetchAPI';
 import Loading from '../pages/Loading';
 import Timer from './Timer';
-import { setPlayerScore } from '../redux/action';
+import { setPlayerAssertions, setPlayerScore } from '../redux/action';
 
 const answerBtn = '#answerBtn';
 const INDEX_NUMBER = 4;
@@ -20,6 +20,7 @@ class RenderQuestions extends React.Component {
       finishedLocal: false,
       randomRespostas: [],
       score: 0,
+      assertions: 0,
     };
   }
 
@@ -107,6 +108,7 @@ timer = () => {
       const scoreSum = correctValue + (seconds * resultDiff);
       this.setState((prevState) => ({
         score: prevState.score + scoreSum,
+        assertions: prevState.assertions + 1,
       }), () => {
         const { score } = this.state;
         dispatch(setPlayerScore(score));
@@ -129,7 +131,12 @@ timer = () => {
       }), this.renderQuestions);
       this.handleTimer();
     }
-    if (index === INDEX_NUMBER) { history.push('/feedback'); }
+    if (index === INDEX_NUMBER) {
+      const { assertions } = this.state;
+      const { dispatch } = this.props;
+      history.push('/feedback');
+      dispatch(setPlayerAssertions(assertions));
+    }
   }
 
   createNextBtn = () => {
@@ -227,10 +234,6 @@ timer = () => {
     );
   }
 }
-
-// const mapStateToProps = (state) => ({
-//   prevScore: state.scoreAction.player.score,
-// });
 
 RenderQuestions.propTypes = {
   dispatch: PropTypes.func.isRequired,
