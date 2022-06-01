@@ -19,6 +19,11 @@ const player = (state = INITIAL_STATE, action) => {
       gravatarEmail: '',
 
     };
+  case 'PLAYER_ASSERTIONS':
+    return {
+      ...state,
+      assertions: action.assertions,
+    };
   default:
     return state;
   }

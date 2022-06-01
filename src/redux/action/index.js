@@ -2,6 +2,7 @@ export const SET_USER_NAME = 'SET_USER_NAME';
 export const SET_ANSWER_TIMER = 'SET_ANSWER_TIMER';
 export const PLAYER_SCORE = 'PLAYER_SCORE';
 export const SET_TIMER_VALUE = 'SET_TIMER_VALUE';
+export const PLAYER_ASSERTIONS = 'PLAYER_ASSERTIONS';
 
 export const setUserName = (name) => ({
   type: 'SET_USER_NAME',
@@ -21,4 +22,9 @@ export const setTimerValue = (seconds) => ({
 export const setPlayerScore = (score) => ({
   type: 'PLAYER_SCORE',
   score,
+});
+
+export const setPlayerAssertions = (assertions) => ({
+  type: 'PLAYER_ASSERTIONS',
+  assertions,
 });
