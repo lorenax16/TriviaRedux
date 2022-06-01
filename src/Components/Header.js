@@ -29,11 +29,14 @@ class Header extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  name: state.loginAction.name,
-  email: state.loginAction.email,
-  // playerScore: state.scoreAction.player.score,
-});
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    name: state.loginAction.name,
+    email: state.loginAction.email,
+    playerScore: state.player.score,
+  };
+};
 
 Header.propTypes = {
   name: PropTypes.string,
