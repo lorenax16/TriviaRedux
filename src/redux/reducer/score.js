@@ -1,14 +1,27 @@
 const INITIAL_STATE = {
+
+  name: '',
+  assertions: 0,
   score: 0,
+  gravatarEmail: '',
+
 };
 
-const scoreAction = (state = INITIAL_STATE, action) => {
+const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case 'PLAYER_SCORE':
-    return action.payload;
+    return {
+      ...state,
+
+      name: '',
+      assertions: 0,
+      score: action.score,
+      gravatarEmail: '',
+
+    };
   default:
     return state;
   }
 };
 
-export default scoreAction;
+export default player;

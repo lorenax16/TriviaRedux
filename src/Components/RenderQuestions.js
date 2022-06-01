@@ -19,7 +19,7 @@ class RenderQuestions extends React.Component {
       seconds: 30,
       finishedLocal: false,
       randomRespostas: [],
-      score: 2,
+      score: 0,
     };
   }
 
@@ -84,8 +84,8 @@ timer = () => {
   }
 
   handleClick = (event) => {
-    const { seconds, index, score } = this.state;
-    const { setScore } = this.props;
+    const { seconds } = this.state;
+    const { dispatch } = this.props;
     this.setState({
       finishedLocal: true,
     }, () => clearInterval(this.intervalId));
@@ -107,18 +107,16 @@ timer = () => {
       const scoreSum = correctValue + (seconds * resultDiff);
       this.setState((prevState) => ({
         score: prevState.score + scoreSum,
-      }));
-
-      if (index === INDEX_NUMBER) {
-        console.log('chegou aqui');
-        // dispatch(setPlayerScore(scoreState));
-      }
+      }), () => {
+        const { score } = this.state;
+        dispatch(setPlayerScore(score));
+      });
     }
-    setScore(score);
   }
 
   handleNext = () => {
     const { index } = this.state;
+
     const allBTn = document.querySelectorAll(answerBtn);
     if (index < INDEX_NUMBER) {
       for (let i = 0; i < allBTn.length; i += 1) {
@@ -228,19 +226,15 @@ timer = () => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  setScore: (score) => dispatch(setPlayerScore(score)),
-});
-
 // const mapStateToProps = (state) => ({
 //   prevScore: state.scoreAction.player.score,
 // });
 
 RenderQuestions.propTypes = {
-  setScore: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
   // history: PropTypes.shape({
   //   push: PropTypes.func.isRequired,
   // }).isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(RenderQuestions);
+export default connect(null)(RenderQuestions);
