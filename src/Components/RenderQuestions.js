@@ -1,10 +1,13 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { fetchTrivia } from '../api/fetchAPI';
 import Loading from '../pages/Loading';
 import Timer from './Timer';
+import { setPlayerScore } from '../redux/action';
 
 const answerBtn = '#answerBtn';
+const INDEX_NUMBER = 4;
 
 class RenderQuestions extends React.Component {
   constructor() {
@@ -16,6 +19,7 @@ class RenderQuestions extends React.Component {
       seconds: 30,
       finishedLocal: false,
       randomRespostas: [],
+      score: 2,
     };
   }
 
@@ -35,12 +39,6 @@ class RenderQuestions extends React.Component {
 timer = () => {
   const TIME_LIMIT = 0;
   const { seconds, finishedLocal } = this.state;
-  // const { timer, cronometro, dispatchSecondsValue, seconds, finishedLocal } = this.props;
-  // console.log(seconds);
-
-  // if (seconds) {
-  //   clearInterval(this.intervalId);
-  // }
   if (seconds === TIME_LIMIT) {
     this.setState({ seconds: 30, finishedLocal: true });
   }
@@ -86,7 +84,8 @@ timer = () => {
   }
 
   handleClick = (event) => {
-    // const { finishedLocal } = this.state;
+    const { seconds, index, score } = this.state;
+    const { setScore } = this.props;
     this.setState({
       finishedLocal: true,
     }, () => clearInterval(this.intervalId));
@@ -102,21 +101,24 @@ timer = () => {
       }
       console.log(event.target.name);
     }
-    // const resultDiff = this.calcValue();
+    const resultDiff = this.calcValue();
+    if (event.target.name === 'correct') {
+      const correctValue = 10;
+      const scoreSum = correctValue + (seconds * resultDiff);
+      this.setState((prevState) => ({
+        score: prevState.score + scoreSum,
+      }));
 
-    // if (event.target.name === 'correct') {
-    //   const correctValue = 10;
-    //   const score = correctValue + (stopwatch * resultDiff);
-    //   console.log(score);
-    // }
-    // console.log(stopwatch);
-
-    // return 0;
+      if (index === INDEX_NUMBER) {
+        console.log('chegou aqui');
+        // dispatch(setPlayerScore(scoreState));
+      }
+    }
+    setScore(score);
   }
 
   handleNext = () => {
     const { index } = this.state;
-    const INDEX_NUMBER = 4;
     const allBTn = document.querySelectorAll(answerBtn);
     if (index < INDEX_NUMBER) {
       for (let i = 0; i < allBTn.length; i += 1) {
@@ -226,10 +228,19 @@ timer = () => {
   }
 }
 
-// RenderQuestions.propTypes = {
-//   history: PropTypes.shape({
-//     push: PropTypes.func.isRequired,
-//   }).isRequired,
-// };
+const mapDispatchToProps = (dispatch) => ({
+  setScore: (score) => dispatch(setPlayerScore(score)),
+});
 
-export default RenderQuestions;
+// const mapStateToProps = (state) => ({
+//   prevScore: state.scoreAction.player.score,
+// });
+
+RenderQuestions.propTypes = {
+  setScore: PropTypes.func.isRequired,
+  // history: PropTypes.shape({
+  //   push: PropTypes.func.isRequired,
+  // }).isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(RenderQuestions);
