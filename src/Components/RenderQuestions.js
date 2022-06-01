@@ -116,7 +116,7 @@ timer = () => {
 
   handleNext = () => {
     const { index } = this.state;
-
+    const { history } = this.props;
     const allBTn = document.querySelectorAll(answerBtn);
     if (index < INDEX_NUMBER) {
       for (let i = 0; i < allBTn.length; i += 1) {
@@ -129,6 +129,7 @@ timer = () => {
       }), this.renderQuestions);
       this.handleTimer();
     }
+    if (index === INDEX_NUMBER) { history.push('/feedback'); }
   }
 
   createNextBtn = () => {
@@ -147,6 +148,7 @@ timer = () => {
           <button
             type="button"
             onClick={ this.handleNext }
+            data-testid="btn-next"
           >
             Next
 
@@ -232,9 +234,9 @@ timer = () => {
 
 RenderQuestions.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  // history: PropTypes.shape({
-  //   push: PropTypes.func.isRequired,
-  // }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default connect(null)(RenderQuestions);
